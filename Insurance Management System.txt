@@ -1,0 +1,37 @@
+import pymongo
+
+client = pymongo.MongoClient("mongodb://localhost:27017/") db = client["insurance_system"]
+collection = db["policies"]
+def add_policy(policy_id, policy_holder, policy_type, premium_amount): policy = {
+"policy_id": policy_id, "policy_holder": policy_holder, "policy_type": policy_type, "premium_amount": premium_amount
+}
+collection.insert_one(policy) print("Policy added successfully!")
+def get_policies_by_holder(policy_holder):
+policies = collection.find({"policy_holder": policy_holder}) for policy in policies:
+print(f"Policy ID: {policy['policy_id']}, Type: {policy['policy_type']}, Premium Amount: {policy['premium_amount']}")
+ 
+def list_all_policies(): policies = collection.find() for policy in policies:
+print(f"Policy ID: {policy['policy_id']}, Holder:
+{policy['policy_holder']}, Type: {policy['policy_type']}, Premium Amount:
+{policy['premium_amount']}")
+
+def delete_policy(policy_id):
+result = collection.delete_one({"policy_id": policy_id}) if result.deleted_count == 1:
+print(f"Policy with ID {policy_id} has been deleted successfully.") else:
+print(f"Policy with ID {policy_id} not found.")
+while True:
+print("\nInsurance Management System") print("1. Add Policy")
+print("2. Get Policies by Holder") print("3. List All Policies") print("4.Delete the policy") print("5. Exit")
+choice = input("Enter your choice: ") if choice == "1":
+policy_id = input("Enter Policy ID: ")
+policy_holder = input("Enter Policy Holder: ") policy_type = input("Enter Policy Type: ") premium_amount = float(input("Enter Premium Amount: "))
+add_policy(policy_id, policy_holder, policy_type, premium_amount)
+elif choice == "2":
+policy_holder = input("Enter Policy Holder: ") get_policies_by_holder(policy_holder)
+elif choice == "3": list_all_policies()
+
+elif choice == "4":
+policy_id = input("Enter Policy ID to delete: ") delete_policy(policy_id)
+elif choice == "5": print("Exiting the program.") break
+else
+print("Invalid choice. Please try again.")
